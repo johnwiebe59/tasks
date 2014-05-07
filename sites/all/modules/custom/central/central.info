@@ -1,3 +1,4 @@
 name = Central
 description = "Enable common modules upon update"
 core = 7.x
+package = On-Boarding Tasks
