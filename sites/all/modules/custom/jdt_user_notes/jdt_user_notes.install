@@ -1,0 +1,9 @@
+<?php
+
+/**
+ * Implements hook_schema
+ *
+ * Initialize a database table with columns for 
+ * note_id, article_nid, author_uid and note_text
+ */
+
