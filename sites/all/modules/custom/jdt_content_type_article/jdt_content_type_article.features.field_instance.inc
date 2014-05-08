@@ -71,7 +71,7 @@ function jdt_content_type_article_field_default_field_instances() {
         'year_range' => '-3:+3',
       ),
       'type' => 'date_text',
-      'weight' => 32,
+      'weight' => 4,
     ),
   );
 
@@ -130,7 +130,7 @@ function jdt_content_type_article_field_default_field_instances() {
         'progress_indicator' => 'throbber',
       ),
       'type' => 'image_image',
-      'weight' => 33,
+      'weight' => 1,
     ),
   );
 
@@ -169,7 +169,89 @@ function jdt_content_type_article_field_default_field_instances() {
         'rows' => 5,
       ),
       'type' => 'text_textarea',
-      'weight' => 34,
+      'weight' => 3,
+    ),
+  );
+
+  // Exported field_instance: 'node-article-field_contributor'
+  $field_instances['node-article-field_contributor'] = array(
+    'bundle' => 'article',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'user_reference',
+        'settings' => array(),
+        'type' => 'user_reference_default',
+        'weight' => 6,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_contributor',
+    'label' => 'Contributor',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'user_reference',
+      'settings' => array(
+        'autocomplete_match' => 'contains',
+        'autocomplete_path' => 'user_reference/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'user_reference_autocomplete',
+      'weight' => 7,
+    ),
+  );
+
+  // Exported field_instance: 'node-article-field_related_articles'
+  $field_instances['node-article-field_related_articles'] = array(
+    'bundle' => 'article',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'node_reference',
+        'settings' => array(),
+        'type' => 'node_reference_default',
+        'weight' => 5,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_related_articles',
+    'label' => 'Related Articles',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'node_reference',
+      'settings' => array(
+        'autocomplete_match' => 'contains',
+        'autocomplete_path' => 'node_reference/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'node_reference_autocomplete',
+      'weight' => 6,
     ),
   );
 
@@ -209,7 +291,7 @@ function jdt_content_type_article_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 35,
+      'weight' => 2,
     ),
   );
 
@@ -218,6 +300,8 @@ function jdt_content_type_article_field_default_field_instances() {
   t('Article Date');
   t('Article Image');
   t('Body');
+  t('Contributor');
+  t('Related Articles');
   t('Slug');
   t('Teaser just of the article');
 
