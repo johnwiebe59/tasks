@@ -23,3 +23,11 @@ function central_update_7001(&$sandbox) {
 
 	module_enable($modules, TRUE);
 }
+
+function central_update_7002(&$sandbox) {
+	$modules = array(
+		'jdt_content_type_article'
+	);
+
+	module_enable($modules, TRUE);
+}
