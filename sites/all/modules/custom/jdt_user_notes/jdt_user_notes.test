@@ -1,0 +1,20 @@
+<?php
+
+class JdtUserNotesDatabaseTestCase extends DrupalWebTestCase {
+
+
+    public static function getInfo() {
+        return array(
+            'name' => 'jdt_user_notes tests',
+            'description' => 'Tests the jdt_user_notes database setter/getters',
+            'group' => 'jdt_user_notes'
+        );
+    }
+    /**
+     * Set up the test environment
+     */
+    public function setup() {
+        parent::setup('jdt_user_notes');
+    }
+
+}
