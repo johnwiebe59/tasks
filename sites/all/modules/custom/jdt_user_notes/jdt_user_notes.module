@@ -14,10 +14,6 @@ function jdt_user_notes_permission() {
         'remove notes' => array(
             'title' => t('Remove Notes'),
             'description' => t('Allows user to remove existing notes.')
-        ),
-        'view all notes' => array(
-            'title' => t('View All Notes'),
-            'description' => t('Allows the user to view all notes, including those they didnt create')
         )
     );
 }
