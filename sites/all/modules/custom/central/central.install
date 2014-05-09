@@ -5,7 +5,6 @@
  * 
  * Enables all the common modules
  */
-
 function central_update_7001(&$sandbox) {
 	$modules = array(
 		'views', 
@@ -30,4 +29,32 @@ function central_update_7002(&$sandbox) {
 	);
 
 	module_enable($modules, TRUE);
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Deletes unused field instance from presales op.
+ */
+function central_update_7003(&$sandbox) {
+	$field_instances = array(
+	    'field_tags' => array(
+	      'entity' => 'node',
+	      'bundle' => 'article'
+	    ),
+	    'field_image' => array(
+	    	'entity' => 'node',
+	    	'bundle' => 'article'
+	    )
+	);
+	
+	foreach ($field_instances as $field_name => $field_props) {
+	  $field_instance = field_info_instance(
+	    $field_props['entity'],
+	    $field_name,
+	    $field_props['bundle']
+	  )
+	  field_delete_instance($field_instance);
+	}
+	field_purge_batch(100);
 }

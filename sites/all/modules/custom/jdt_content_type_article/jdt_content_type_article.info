@@ -6,16 +6,12 @@ version = 7.x-1.2
 project = jdt_content_type_article
 dependencies[] = ctools
 dependencies[] = date
-<<<<<<< HEAD
 dependencies[] = date_api
 dependencies[] = date_views
-dependencies[] = image
-=======
 dependencies[] = features
 dependencies[] = field_group
 dependencies[] = image
 dependencies[] = node_reference
->>>>>>> checkpoint3
 dependencies[] = text
 dependencies[] = user_reference
 dependencies[] = views
