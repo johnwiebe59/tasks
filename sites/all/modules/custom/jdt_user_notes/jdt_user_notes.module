@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * Implements hook_permission()
+ *
+ * Defines new permissions for jdt_user_notes
+ */
+function jdt_user_notes_permission() {
+    return array(
+        'add notes' => array(
+            'title' => t('Add Notes'),
+            'description' => t('Allows user to create notes.')
+        ),
+        'remove notes' => array(
+            'title' => t('Remove Notes'),
+            'description' => t('Allows user to remove existing notes.')
+        ),
+        'view all notes' => array(
+            'title' => t('View All Notes'),
+            'description' => t('Allows the user to view all notes, including those they didnt create')
+        )
+    );
+}
