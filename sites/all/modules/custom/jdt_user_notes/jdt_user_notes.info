@@ -2,5 +2,5 @@ name = jdt_user_notes
 description = "Allow users to add their own notes to an article"
 core = 7.x
 package = On-Boarding Tasks
-files[] = jdt_user_notes.inc
+files[] = jdt_user_notes_api.inc
 files[] = jdt_user_notes.test
