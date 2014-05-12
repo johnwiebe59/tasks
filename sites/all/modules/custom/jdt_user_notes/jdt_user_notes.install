@@ -38,8 +38,6 @@ function jdt_user_notes_schema() {
             )
         ),
         'primary key' => array('note_id')
-        //indexes?
-        //unique keys?
     );
     return $schema;
 }
