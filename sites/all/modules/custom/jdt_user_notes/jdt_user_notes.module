@@ -14,11 +14,7 @@ function jdt_user_notes_permission() {
     return array(
         'create_notes' => array(
             'title' => t('Add Notes'),
-            'description' => t('Allows a user to create notes.')
-        ),
-        'view_all_notes' => array(
-            'title' => t('View All Notes'),
-            'description' => t('Allows a user to view everyone notes.')
+            'description' => t('Allows a user to create and update their own notes.')
         )
     );
 }
@@ -30,8 +26,15 @@ function jdt_user_notes_permission() {
  */
 function jdt_user_notes_menu() {
     $items['notes/create_note'] = array(
-        'title' => 'Create a New Note',
-        'description' => 'Enter the text of a new note',
+        'title' => 'Create Note',
+        'description' => 'Creates a new note for an article',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('jdt_user_notes_form'),
+        'access arguments' => array('create_notes')
+    );
+    $items['notes/update_note'] = array(
+        'title' => 'Update Note',
+        'description' => 'Upadate an existing note',
         'page callback' => 'drupal_get_form',
         'page arguments' => array('jdt_user_notes_form'),
         'access arguments' => array('create_notes')
@@ -56,7 +59,7 @@ function jdt_user_notes_form($form, &$form_state) {
     $form['note'] = array(
         '#type' => 'textarea',
         '#title' => t('Note'),
-        '#required' => TRUE,
+        '#required' => TRUE
     );
 
     $form['submit'] = array(
