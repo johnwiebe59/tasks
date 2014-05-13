@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Module file for jdt_user_notes
+ */
+
+/**
  * Implements hook_permission()
  *
  * Defines new permissions for jdt_user_notes
@@ -16,4 +21,45 @@ function jdt_user_notes_permission() {
             'description' => t('Allows user to remove existing notes.')
         )
     );
+}
+
+/**
+ * Implements hook_menu()
+ *
+ * Create a menu entry to link to note creation form
+ */
+function jdt_user_notes_menu() {
+    $items['notes/create_note'] = array(
+        'title' => 'Create a New Note',
+        'description' => 'Enter the text of a new note',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('jdt_user_notes_form'),
+        'access callback' => TRUE
+
+    );
+    return $items;
+}
+
+/**
+ * Implements hook_form()
+ *
+ * Creates a custom form for entering the text for a new note
+ */
+function jdt_user_notes_form($form, &$form_state) {
+    $form['description'] = array(
+        '#type' => 'item',
+        '#title' => t('Enter the text for your new note')
+    );
+
+    $form['note'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Note'),
+        '#required' => TRUE
+    );
+
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Submit'
+    );
+    return $form;
 }
