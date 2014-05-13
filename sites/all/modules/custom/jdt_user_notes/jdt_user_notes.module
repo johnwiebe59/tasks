@@ -12,13 +12,13 @@
  */
 function jdt_user_notes_permission() {
     return array(
-        'add notes' => array(
+        'create_notes' => array(
             'title' => t('Add Notes'),
-            'description' => t('Allows user to create notes.')
+            'description' => t('Allows a user to create notes.')
         ),
-        'remove notes' => array(
-            'title' => t('Remove Notes'),
-            'description' => t('Allows user to remove existing notes.')
+        'view_all_notes' => array(
+            'title' => t('View All Notes'),
+            'description' => t('Allows a user to view everyone notes.')
         )
     );
 }
@@ -34,8 +34,7 @@ function jdt_user_notes_menu() {
         'description' => 'Enter the text of a new note',
         'page callback' => 'drupal_get_form',
         'page arguments' => array('jdt_user_notes_form'),
-        'access callback' => TRUE
-
+        'access arguments' => array('create_notes')
     );
     return $items;
 }
@@ -51,10 +50,13 @@ function jdt_user_notes_form($form, &$form_state) {
         '#title' => t('Enter the text for your new note')
     );
 
+    // global $user;
+    // $user->uid;
+
     $form['note'] = array(
         '#type' => 'textarea',
         '#title' => t('Note'),
-        '#required' => TRUE
+        '#required' => TRUE,
     );
 
     $form['submit'] = array(
