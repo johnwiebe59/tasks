@@ -2,8 +2,11 @@
 
 /**
  * @file
+ *
  * Module file for jdt_user_notes
  */
+
+require_once('jdt_user_notes_api.inc');
 
 /**
  * Implements hook_permission()
@@ -25,6 +28,8 @@ function jdt_user_notes_permission() {
  * Create a menu entry to link to note creation form
  */
 function jdt_user_notes_menu() {
+
+    // Create note menu
     $items['notes/create_note'] = array(
         'title' => 'Create Note',
         'description' => 'Creates a new note for an article',
@@ -32,6 +37,7 @@ function jdt_user_notes_menu() {
         'page arguments' => array('jdt_user_notes_form'),
         'access arguments' => array('create_notes')
     );
+    // Update note menu
     $items['notes/update_note'] = array(
         'title' => 'Update Note',
         'description' => 'Upadate an existing note',
@@ -53,8 +59,11 @@ function jdt_user_notes_form($form, &$form_state) {
         '#title' => t('Enter the text for your new note')
     );
 
-    // global $user;
-    // $user->uid;
+    $form['nid'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Article ID'),
+        '#required' => TRUE
+    );
 
     $form['note'] = array(
         '#type' => 'textarea',
@@ -67,4 +76,15 @@ function jdt_user_notes_form($form, &$form_state) {
         '#value' => 'Submit'
     );
     return $form;
+}
+
+/**
+ * Implements hook_submit
+ *
+ * Submit the note information to the database
+ */
+function jdt_user_notes_form_submit($form, &$form_state) {
+    global $user;
+    new_note($form_state['values']['nid'], $user->uid, $form_state['values']['note']);
+    drupal_set_message(t('Note Created'));
 }
