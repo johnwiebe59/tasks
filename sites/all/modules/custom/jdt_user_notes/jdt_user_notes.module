@@ -109,7 +109,7 @@ function jdt_user_notes_update_form($form, &$form_state) {
     $notes = get_all_notes($uid);
 
     $options = array();
-    foreach($notes as $note) {
+    foreach ($notes as $note) {
         $options[$note->note_id] = array('note' => $note->note_text, 'note_id' => $note->note_id);
     }
 
