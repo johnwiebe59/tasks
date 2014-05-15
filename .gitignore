@@ -1,2 +1,4 @@
 sites/tasks.localhost
 sites/*.dev
+sites/all/modules/contrib/form_example
+sites/all/modules/contrib/menu_example

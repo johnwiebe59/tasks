@@ -58,6 +58,12 @@ function central_update_7003(&$sandbox) {
 	}
 	field_purge_batch(100);
 }
+
+/**
+ * Implements hook_update_N().
+ *
+ * Enables jdt_user_notes custom module
+ */
 function central_update_7004(&$sandbox) {
 	$modules = array(
 		'jdt_user_notes'
@@ -65,10 +71,28 @@ function central_update_7004(&$sandbox) {
 
 	module_enable($modules, TRUE);
 }
+
+/**
+ * Implements hook_update_N().
+ *
+ * Disables toolbar and shortcut modules
+ */
 function central_update_7005(&$sandbox) {
 	$modules = array(
 		'toolbar',
 		'shortcut'
 	);
 	module_disable($modules, TRUE);
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Enables Coder module
+ */
+function central_update_7006(&$sandbox) {
+	$modules = array(
+		'coder'
+	);
+	module_enable($modules, TRUE);
 }
