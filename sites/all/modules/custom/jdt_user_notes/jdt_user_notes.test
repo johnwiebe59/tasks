@@ -1,0 +1,70 @@
+<?php
+
+/**
+ * @file
+ * Unit tests for jdt_user_notes_api
+ *
+ * Provides unit tests to test the getters and setters of the jdt_user_notes_api
+ */
+
+require_once('jdt_user_notes_api.inc');
+
+class JdtUserNotesDatabaseTestCase extends DrupalWebTestCase {
+
+
+    public static function getInfo() {
+        return array(
+            'name' => 'jdt_user_notes tests',
+            'description' => 'Tests the jdt_user_notes database setter/getters',
+            'group' => 'jdt_user_notes'
+        );
+    }
+
+    /**
+     * Set up the test environment
+     */
+    public function setup() {
+        parent::setup('jdt_user_notes');
+    }
+
+    /**
+     * Run Database tests
+     */
+    public function testDatabaseApi() {
+        // test getting non-existing note
+        $result = get_note(779, 779);
+        $record = $result->fetchField(0);
+        $this->assertFalse($record);
+
+        // test creation and retrieval of new note
+        new_note(779, 779, 'test note');
+        $result = get_note(779, 779);
+        $record = $result->fetchField(0);
+        $this->assertEqual($record, 'test note');
+
+        // test updating a note
+        update_note(779, 779, 'updated test note');
+        $result = get_note(779, 779);
+        $record = $result->fetchField(0);
+        $this->assertEqual($record, 'updated test note');
+
+        // test updating non-existing note
+        update_note(1000, 1000, 'fail');
+        $result = get_note(1000, 1000);
+        $record = $result->fetchField(0);
+        $this->assertFalse($record);
+
+        // test updating a note with same content
+        update_note(779, 779, 'updated test note');
+        $result = get_note(779, 779);
+        $record = $result->fetchField(0);
+        $this->assertEqual($record, 'updated test note');
+
+        // test deleting a note
+        delete_note(779, 779);
+        $result = get_note(779, 779);
+        $record = $result->fetchField(0);
+        $this->assertFalse($record);
+    }
+
+}
