@@ -92,3 +92,18 @@ function central_update_7006(&$sandbox) {
   );
   module_enable($modules, TRUE);
 }
+
+/**
+ * Disable Bartik Theme and enable Business Theme
+ */
+function central_update_7007(&$sandbox) {
+  $enable = array(
+    'business'
+  );
+  $disable = array(
+    'bartik'
+  );
+  theme_enable($enable);
+  variable_set('theme_default', 'business');
+  theme_disable($disable);
+}
