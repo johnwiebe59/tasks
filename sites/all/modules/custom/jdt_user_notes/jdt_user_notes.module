@@ -30,12 +30,13 @@ function jdt_user_notes_permission() {
 function jdt_user_notes_menu() {
 
     // Create note menu
-    $items['notes/create_note'] = array(
+    $items['node/%/create_note'] = array(
         'title' => 'Create Note',
         'description' => 'Creates a new note for an article',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('jdt_user_notes_new_form'),
-        'access arguments' => array('create_notes')
+        'page arguments' => array('jdt_user_notes_new_form', 1),
+        'access arguments' => array('create_notes'),
+        'type' => MENU_LOCAL_TASK
     );
     // Update note menu
     $items['notes/update_note'] = array(
@@ -53,17 +54,15 @@ function jdt_user_notes_menu() {
  *
  * Creates a custom form for entering the text for a new note
  */
-function jdt_user_notes_new_form($form, &$form_state) {
+function jdt_user_notes_new_form($form, &$form_state, $nid) {
     $form['description'] = array(
         '#type' => 'item',
         '#title' => t('Enter the text for your new note')
     );
 
-    // TEMPORARY
     $form['nid'] = array(
-        '#type' => 'textfield',
-        '#title' => t('Article ID'),
-        '#required' => TRUE
+        '#type' => 'hidden',
+        '#value' => $nid
     );
 
     $form['note'] = array(
