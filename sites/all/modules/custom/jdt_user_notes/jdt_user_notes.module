@@ -40,7 +40,7 @@ function jdt_user_notes_menu() {
     );
     // Update note menu
     $items['notes/update_note'] = array(
-        'title' => 'Update Note',
+        'title' => 'View All Notes',
         'page callback' => 'drupal_get_form',
         'page arguments' => array('jdt_user_notes_update_form'),
         'access arguments' => array('create_notes')
