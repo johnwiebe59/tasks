@@ -34,17 +34,17 @@ function jdt_user_notes_menu() {
         'title' => 'Create Note',
         'description' => 'Creates a new note for an article',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('jdt_user_notes_form'),
+        'page arguments' => array('jdt_user_notes_new_form'),
         'access arguments' => array('create_notes')
     );
     // Update note menu
     $items['notes/update_note'] = array(
         'title' => 'Update Note',
-        'description' => 'Upadate an existing note',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('jdt_user_notes_form'),
+        'page arguments' => array('jdt_user_notes_update_form'),
         'access arguments' => array('create_notes')
     );
+
     return $items;
 }
 
@@ -53,12 +53,13 @@ function jdt_user_notes_menu() {
  *
  * Creates a custom form for entering the text for a new note
  */
-function jdt_user_notes_form($form, &$form_state) {
+function jdt_user_notes_new_form($form, &$form_state) {
     $form['description'] = array(
         '#type' => 'item',
         '#title' => t('Enter the text for your new note')
     );
 
+    // TEMPORARY
     $form['nid'] = array(
         '#type' => 'textfield',
         '#title' => t('Article ID'),
@@ -75,6 +76,7 @@ function jdt_user_notes_form($form, &$form_state) {
         '#type' => 'submit',
         '#value' => 'Submit'
     );
+
     return $form;
 }
 
@@ -83,8 +85,128 @@ function jdt_user_notes_form($form, &$form_state) {
  *
  * Submit the note information to the database
  */
-function jdt_user_notes_form_submit($form, &$form_state) {
+function jdt_user_notes_new_form_submit($form, &$form_state) {
     global $user;
     new_note($form_state['values']['nid'], $user->uid, $form_state['values']['note']);
     drupal_set_message(t('Note Created'));
+}
+
+/**
+ * Implements hook_form()
+ *
+ * The first page
+ * A form displaying all your current notes
+ * and allowing you to select which one to edit
+ */
+function jdt_user_notes_update_form($form, &$form_state) {
+    // Display page 2 if $form_state['page_num'] == 2
+    if (!empty($form_state['page_num']) && $form_state['page_num'] == 2) {
+        return jdt_user_notes_update2_form($form, $form_state);
+    }
+    $form_state['page_num'] = 1;
+
+    global $user;
+    $uid = $user->uid;
+    $notes = get_all_notes($uid);
+
+    $options = array();
+    foreach($notes as $note) {
+        $options[$note->note_id] = array('note' => $note->note_text, 'note_id' => $note->note_id);
+    }
+
+    $form['description'] = array(
+        '#type' => 'item',
+        '#title' => t('Select which note you want to edit')
+    );
+
+    $form['table'] = array(
+        '#type' => 'tableselect',
+        '#required' => TRUE,
+        '#multiple' => FALSE,
+        '#header' => array('note' => t('Note')),
+        '#options' => $options
+    );
+
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Next',
+        '#submit' => array('jdt_user_notes_update_next_submit'),
+    );
+
+    return $form;
+}
+
+/**
+ * Implements hook_form()
+ *
+ * The second page
+ * Edit the text of your existing note
+ */
+function jdt_user_notes_update2_form($form, &$form_state) {
+    $note_text = $form_state['page_values'][1]['note']['note'];
+
+    $form['description'] = array(
+        '#type' => 'item',
+        '#title' => t('Edit an existing note')
+    );
+
+    $form['note'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Note'),
+        '#default_value' => $note_text,
+        '#required' => TRUE
+    );
+
+    $form['back'] = array(
+        '#type' => 'submit',
+        '#value' => 'Back',
+        '#submit' => array('jdt_user_notes_update_back_submit')
+    );
+
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Submit',
+        '#submit' => array('jdt_user_notes_update2_form_submit')
+    );
+
+    return $form;
+}
+
+/**
+ * Implements hook_submit()
+ *
+ * Next button for the first page
+ */
+function jdt_user_notes_update_next_submit($form, &$form_state) {
+    //$note_id = $form_state['values']['table'];
+   
+   $form_state['values']['note'] = $form_state['complete form']['table']['#options'][$form_state[
+   'values']['table']];
+    //keep values from this page
+    $form_state['page_values'][1] = $form_state['values'];
+
+    $form_state['page_num'] = 2;
+    $form_state['rebuild'] = TRUE;
+}
+
+/**
+ * Implements hook_submit()
+ *
+ * Back button for second page
+ */
+function jdt_user_notes_update_back_submit($form, &$form_state) {
+    $form_state['values'] = $form_state['page_values'][1];
+    $form_state['page_num'] = 1;
+    $form_state['rebuild'];
+}
+
+/**
+ * Implements hook_submit()
+ *
+ * Final submit handler for the second page
+ * Will update the text of the note in the database
+ */
+function jdt_user_notes_update2_form_submit($form, &$form_state) {
+    update_note($form_state['page_values'][1]['note']['note_id'], $form_state['values']['note']);
+    drupal_set_message(t('Note Updated'));
 }
