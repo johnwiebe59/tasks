@@ -1,5 +1,5 @@
-name = Business
-description = Business is a premium Drupal 7 theme. Developed by <a href="http://www.devsaran.com">Devsaran.com</a>.
+name = On-Boarding Tasks
+description = Developed by <a href="http://www.devsaran.com">Devsaran.com</a>.
 core = 7.x
 engine = phptemplate
 stylesheets[all][] = style.css

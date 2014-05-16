@@ -98,12 +98,12 @@ function central_update_7006(&$sandbox) {
  */
 function central_update_7007(&$sandbox) {
   $enable = array(
-    'business'
+    'on-boarding'
   );
   $disable = array(
     'bartik'
   );
   theme_enable($enable);
-  variable_set('theme_default', 'business');
+  variable_set('theme_default', 'on-boarding');
   theme_disable($disable);
 }

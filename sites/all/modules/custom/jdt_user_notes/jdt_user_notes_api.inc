@@ -33,6 +33,19 @@ function get_all_notes($uid) {
 }
 
 /**
+ * Get notes for current article made by the current user
+ */
+function get_article_notes($uid, $nid) {
+  $conditions = db_and()
+    ->condition('author_uid', $uid, '=')
+    ->condition('article_nid', $nid, '=');
+  return db_select('jdt_user_notes')
+    ->fields('jdt_user_notes', array('note_id', 'note_text'))
+    ->condition($conditions)
+    ->execute();
+}
+
+/**
  * Create a new note
  */
 function new_note($nid, $uid, $text) {
