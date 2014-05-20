@@ -1,43 +1,49 @@
 <?php
 
 /**
+ * @file
+ *
+ * Install file for jdt_user_notes
+ */
+
+/**
  * Implements hook_schema()
  *
  * Initialize a database table with columns for 
  * note_id, article_nid, author_uid and note_text
  */
 function jdt_user_notes_schema() {
-    $schema['jdt_user_notes'] = array(
-        'description' => 'table of user-created notes assigned to specific articles',
-        'fields' => array(
-            'note_id' => array(
-                'description' => 'id of the current note',
-                'type' => 'serial',
-                'unsigned' => TRUE,
-                'not null' => TRUE
-            ),
-            'article_nid' => array(
-                'description' => 'node id of the coresponding article',
-                'type' => 'int',
-                'size' => 'normal',
-                'unsigned' => TRUE,
-                'not null' => TRUE,
-                'default' => 0
-            ),
-            'author_uid' => array(
-                'description' => 'id of the user who created the note',
-                'type' => 'int',
-                'unsigned' => TRUE,
-                'not null' => TRUE,
-                'default' => 0
-            ),
-            'note_text' => array(
-                'description' => 'content of the actual note',
-                'type' => 'text',
-                'size' => 'normal'
-            )
+  $schema['jdt_user_notes'] = array(
+    'description' => 'table of user-created notes assigned to specific articles',
+      'fields' => array(
+        'note_id' => array(
+          'description' => 'id of the current note',
+          'type' => 'serial',
+          'unsigned' => TRUE,
+          'not null' => TRUE
         ),
-        'primary key' => array('note_id')
+        'article_nid' => array(
+          'description' => 'node id of the coresponding article',
+          'type' => 'int',
+            'size' => 'normal',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+            'default' => 0
+        ),
+        'author_uid' => array(
+            'description' => 'id of the user who created the note',
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+            'default' => 0
+        ),
+        'note_text' => array(
+            'description' => 'content of the actual note',
+            'type' => 'text',
+            'size' => 'normal'
+        )
+      ),
+      'primary key' => array('note_id')
     );
     return $schema;
 }

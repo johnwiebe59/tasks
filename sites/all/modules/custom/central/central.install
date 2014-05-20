@@ -1,74 +1,119 @@
 <?php
+/**
+ * @file
+ *
+ * Install file for Central module
+ */
 
 /**
- * Implements hook_update_N()
- * 
  * Enables all the common modules
  */
 function central_update_7001(&$sandbox) {
-	$modules = array(
-		'views', 
-		'features', 
-		'strongarm', 
-		'context', 
-		'pathauto', 
-		'diff', 
-		'libraries', 
-		'jquery_update', 
-		'devel', 
-		'module_filter', 
-		'admin_menu'
-	);
+  $modules = array(
+    'views', 
+    'features', 
+    'strongarm', 
+    'context', 
+    'pathauto', 
+    'diff', 
+    'libraries', 
+    'jquery_update', 
+    'devel', 
+    'module_filter', 
+    'admin_menu'
+  );
 
-	module_enable($modules, TRUE);
+  module_enable($modules, TRUE);
 }
 
 function central_update_7002(&$sandbox) {
-	$modules = array(
-		'jdt_content_type_article'
-	);
+  $modules = array(
+    'jdt_content_type_article'
+  );
 
-	module_enable($modules, TRUE);
+  module_enable($modules, TRUE);
 }
 
 /**
- * Implements hook_update_N().
- *
  * Deletes unused field instance from presales op.
  */
 function central_update_7003(&$sandbox) {
-	$field_instances = array(
-	    'field_tags' => array(
-	      'entity' => 'node',
-	      'bundle' => 'article'
-	    ),
-	    'field_image' => array(
-	    	'entity' => 'node',
-	    	'bundle' => 'article'
-	    )
-	);
-	
-	foreach ($field_instances as $field_name => $field_props) {
-	  $field_instance = field_info_instance(
-	    $field_props['entity'],
-	    $field_name,
-	    $field_props['bundle']
-	  );
-	  field_delete_instance($field_instance);
-	}
-	field_purge_batch(100);
+  $field_instances = array(
+    'field_tags' => array(
+      'entity' => 'node',
+      'bundle' => 'article'
+    ),
+    'field_image' => array(
+    'entity' => 'node',
+    'bundle' => 'article'
+  )
+  );
+  
+  foreach ($field_instances as $field_name => $field_props) {
+    $field_instance = field_info_instance(
+      $field_props['entity'],
+      $field_name,
+      $field_props['bundle']
+    );
+  field_delete_instance($field_instance);
+  }
+  field_purge_batch(100);
 }
-function central_update_7004(&$sandbox) {
-	$modules = array(
-		'jdt_user_notes'
-	);
 
-	module_enable($modules, TRUE);
+/**
+ * Enables jdt_user_notes custom module
+ */
+function central_update_7004(&$sandbox) {
+  $modules = array(
+    'jdt_user_notes'
+  );
+
+  module_enable($modules, TRUE);
 }
+
+/**
+ * Disables toolbar and shortcut modules
+ */
 function central_update_7005(&$sandbox) {
-	$modules = array(
-		'toolbar',
-		'shortcut'
-	);
-	module_disable($modules, TRUE);
+  $modules = array(
+    'toolbar',
+  'shortcut'
+  );
+  module_disable($modules, TRUE);
+}
+
+/**
+ * Enables Coder module
+ */
+function central_update_7006(&$sandbox) {
+  $modules = array(
+    'coder',
+    'coder_review'
+  );
+  module_enable($modules, TRUE);
+}
+
+/**
+ * Disable Bartik Theme and enable Business Theme
+ */
+function central_update_7007(&$sandbox) {
+  $enable = array(
+    'on-boarding'
+  );
+  $disable = array(
+    'bartik'
+  );
+  theme_enable($enable);
+  variable_set('theme_default', 'on-boarding');
+  theme_disable($disable);
+}
+
+/**
+ * Enable notes block and give it specific visibility
+ */
+function central_update_7008(&$sandbox) {
+  $modules = array(
+    'php'
+  );
+  module_enable($modules, TRUE);
 }
