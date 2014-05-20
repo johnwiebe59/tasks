@@ -1,4 +1,9 @@
 <?php
+/**
+ * @file
+ *
+ * Implementation of the block display of a user's notes for each article
+ */
 
 /**
  * Implements hook_block_info()
@@ -10,16 +15,7 @@ function jdt_user_notes_block_info() {
     'info' => t('Display Notes'),
     'cache' => DRUPAL_CACHE_PER_USER,
     'region' => 'sidebar_first',
-    // @TODO Should default to only be viewable on articles, in the sidebar, by authenticated users
-    /*'visibitlity' => BLOCK_VISIBILITY_PHP,
-    'pages' => "<?php  
-                  if (arg(0) == 'node' && is_numeric(arg(1)) { 
-                    $node = node_load(array(arg(1)));
-                    if ($node -> type == 'article') {
-                      return TRUE;
-                    }
-                  } 
-                  return FALSE; ?>"*/
+
   );
   return $blocks;
 }
@@ -28,7 +24,7 @@ function jdt_user_notes_block_info() {
  * Implements hook_block_view()
  */
 function jdt_user_notes_block_view($delta = '') {
-  switch($delta) {
+  switch ($delta) {
     case 'notes' :
       $block['subject'] = t('Notes for this article:');
       $block['content'] = drupal_get_form('jdt_user_notes_article_form', arg(1));
