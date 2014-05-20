@@ -53,27 +53,36 @@ function jdt_user_notes_article_form($form, &$form_state, $nid) {
     $options[$note->note_id] = array('note' => $note->note_text, 'note_id' => $note->note_id);
   }
 
-  $form['table'] = array(
-    '#type' => 'tableselect',
-    '#multiple' => FALSE,
-    '#header' => array('note' => t('Note')),
-    '#options' => $options
-  );
+  if (count($options) > 0) {
+    $form['table'] = array(
+      '#type' => 'tableselect',
+      '#multiple' => FALSE,
+      '#header' => array('note' => t('Note')),
+      '#options' => $options
+    );
+   
+    // Selecting this button will link to a new page of the form where you can update the note
+    $form['update_note'] = array(
+      '#type' => 'submit',
+      '#value' => t('Edit selected note'),
+      '#submit' => array('jdt_user_notes_article_form_submit'),
+    );
+  }
+  else {
+    $form['alert'] = array(
+      '#type' => 'item',
+      '#description' => "You currently don't have any notes for this article!"
+    );
+  }
+
   $form['nid'] = array(
     '#type' => 'hidden',
     '#value' => $nid
   );
 
-  // Selecting this button will link to a new page of the form where you can update the note
-  $form['new_note'] = array(
-    '#type' => 'submit',
-    '#value' => t('Edit selected note'),
-    '#submit' => array('jdt_user_notes_article_form_submit'),
-  );
-
   // Selecting this button will link to a new form for creating a note.
   // Should this even be in this form?
-  $form['update_note'] = array(
+  $form['new_note'] = array(
     '#type' => 'submit',
     '#value' => t('Create new note'),
     '#submit' => array('jdt_user_notes_article_form_new')
@@ -91,6 +100,7 @@ function jdt_user_notes_article_form($form, &$form_state, $nid) {
 function jdt_user_notes_article_form_new($form, &$form_state) {
   drupal_goto('node/' . $form_state['values']['nid'] . '/create_note');
 }
+
  /**
   * Implements hook_form_submit()
   *
