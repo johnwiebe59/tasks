@@ -7,18 +7,13 @@
  * Provides setters and getters for the jdt_user_notes database table
  */
 
-// Maybe I should have an exists function?
-
 /**
  * Return the text of the note with this id
  */
-function get_note($uid, $nid) {
-  $conditions = db_and()
-    ->condition('author_uid', $uid, '=')
-    ->condition('article_nid', $nid, '=');
+function get_note($note_id) {
   return db_select('jdt_user_notes')
     ->fields('jdt_user_notes', array('note_text'))
-    ->condition($conditions)
+    ->condition('note_id', $note_id, '=')
     ->execute();
 }
 
