@@ -37,7 +37,12 @@ function jdt_user_notes_block_view($delta = '') {
   return $block;
 }
 
-
+/**
+ * Implements hook_form()
+ *
+ * Displays all notes created by user for the current article
+ * Selecting a note will allow it to be edited
+ */
 function jdt_user_notes_article_form($form, &$form_state, $nid) {
   global $user;
   $uid = $user->uid;
@@ -50,7 +55,6 @@ function jdt_user_notes_article_form($form, &$form_state, $nid) {
 
   $form['table'] = array(
     '#type' => 'tableselect',
-    //'#required' => TRUE, // @TODO Can only be required for editing the note submit, not to create a new note: http://befused.com/drupal/multistep-back-error-suppression
     '#multiple' => FALSE,
     '#header' => array('note' => t('Note')),
     '#options' => $options
@@ -78,10 +82,21 @@ function jdt_user_notes_article_form($form, &$form_state, $nid) {
   return $form;
 }
 
+/**
+ * Implements hook_form_submit()
+ *
+ * Submit handler to create a new note.
+ * Links to specified menu
+ */
 function jdt_user_notes_article_form_new($form, &$form_state) {
   drupal_goto('node/' . $form_state['values']['nid'] . '/create_note');
 }
-
+ /**
+  * Implements hook_form_submit()
+  *
+  * Submit handler to update an existing note
+  * Links to specified menu
+  */
 function jdt_user_notes_article_form_submit($form, &$form_state) {
   drupal_goto('node/' . $form_state['values']['nid'] . '/' . $form_state['values']['table']);
 }
