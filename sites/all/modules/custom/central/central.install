@@ -107,3 +107,13 @@ function central_update_7007(&$sandbox) {
   variable_set('theme_default', 'on-boarding');
   theme_disable($disable);
 }
+
+/**
+ * Enable notes block and give it specific visibility
+ */
+function central_update_7008(&$sandbox) {
+  $modules = array(
+    'php'
+  );
+  module_enable($modules, TRUE);
+}

@@ -4,6 +4,7 @@
  * @file
  *
  * Module file for jdt_user_notes
+ * Creates a permission, two menus and two forms for creating and updating notes
  */
 
 require_once('jdt_user_notes_api.inc');
@@ -16,7 +17,7 @@ require_once('jdt_user_notes_block.inc');
  */
 function jdt_user_notes_permission() {
     return array(
-        'create_notes' => array(
+        'notes' => array(
             'title' => t('Add Notes'),
             'description' => t('Allows a user to create and update their own notes.')
         )
@@ -36,7 +37,7 @@ function jdt_user_notes_menu() {
         'description' => 'Creates a new note for an article',
         'page callback' => 'drupal_get_form',
         'page arguments' => array('jdt_user_notes_new_form'),
-        'access arguments' => array('create_notes'),
+        'access arguments' => array('notes'),
     );
     // Update note menu
     $items['node/%/%'] = array(
@@ -44,7 +45,7 @@ function jdt_user_notes_menu() {
         'description' => 'Update the text of an existing note',
         'page callback' => 'drupal_get_form',
         'page arguments' => array('jdt_user_notes_update_form'),
-        'access arguments' => array('create_notes')
+        'access arguments' => array('notes')
     );
 
     return $items;

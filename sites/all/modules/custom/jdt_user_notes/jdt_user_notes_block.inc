@@ -14,8 +14,20 @@ function jdt_user_notes_block_info() {
   $blocks['notes'] = array(
     'info' => t('Display Notes'),
     'cache' => DRUPAL_CACHE_PER_USER,
+    'status' => 1,
     'region' => 'sidebar_first',
-
+    'visibility' => BLOCK_VISIBILITY_PHP,
+    // Ugly code to only display block if the user has permission and the page is an article
+    'pages' => "<?php
+                  if (arg(0) == 'node' && is_numeric(arg(1))) { 
+                    if (user_access('note')) {
+                      if (node_load(arg(1))->type == 'article') {
+                        return TRUE;
+                      }
+                    }
+                  } 
+                  return FALSE; 
+                ?>"
   );
   return $blocks;
 }
