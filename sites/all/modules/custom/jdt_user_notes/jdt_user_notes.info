@@ -5,3 +5,5 @@ package = On-Boarding Tasks
 files[] = jdt_user_notes_api.inc
 files[] = jdt_user_notes.test
 files[] = jdt_user_notes_block.inc
+dependencies[] = php
+dependencies[] = ctools
