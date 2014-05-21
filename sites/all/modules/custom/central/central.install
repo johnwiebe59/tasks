@@ -119,14 +119,16 @@ function central_update_7008(&$sandbox) {
 }
 
 /**
- * Disable Bartik Theme and enable Business Theme
+ * Disable Bartik Theme and enable On-Boarding Theme
  */
 function central_update_7009(&$sandbox) {
   $enable = array(
     'onboarding'
   );
   $disable = array(
-    'bartik'
+    'bartik',
+    'on_boarding',
+    'on-boarding'
   );
   theme_enable($enable);
   variable_set('theme_default', 'onboarding');
