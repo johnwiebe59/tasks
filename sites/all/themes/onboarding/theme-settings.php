@@ -7,7 +7,7 @@
  * @param $form_state
  *   The form state.
  */
-function business_form_system_theme_settings_alter(&$form, &$form_state) {
+function onboarding_form_system_theme_settings_alter(&$form, &$form_state) {
 
   $form['busi_settings'] = array(
     '#type' => 'fieldset',

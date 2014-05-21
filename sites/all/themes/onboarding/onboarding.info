@@ -1,4 +1,4 @@
-name = OnBoarding Tasks
+name = On-Boarding Tasks
 description = Developed by <a href="http://www.devsaran.com">Devsaran.com</a>.
 core = 7.x
 engine = phptemplate

@@ -96,24 +96,24 @@
   
   <?php print render($page['header']); ?>
   
-    <?php if (theme_get_setting('slideshow_display','business')): ?>
+    <?php if (theme_get_setting('slideshow_display','onboarding')): ?>
     <?php 
-    $url1 = check_plain(theme_get_setting('slide1_url','business'));
-    $url2 = check_plain(theme_get_setting('slide2_url','business'));
-    $url3 = check_plain(theme_get_setting('slide3_url','business'));
+    $url1 = check_plain(theme_get_setting('slide1_url','onboarding'));
+    $url2 = check_plain(theme_get_setting('slide2_url','onboarding'));
+    $url3 = check_plain(theme_get_setting('slide3_url','onboarding'));
     ?>
       <div id="slider">
         <div class="main_view">
             <div class="window">
                 <div class="image_reel">
-                    <a href="<?php print url($url1); ?>"><img src="<?php print base_path() . drupal_get_path('theme', 'business') . '/images/slide-image-1.jpg'; ?>"></a>
-                    <a href="<?php print url($url2); ?>"><img src="<?php print base_path() . drupal_get_path('theme', 'business') . '/images/slide-image-2.jpg'; ?>"></a>
-                    <a href="<?php print url($url3); ?>"><img src="<?php print base_path() . drupal_get_path('theme', 'business') . '/images/slide-image-3.jpg'; ?>"></a>
+                    <a href="<?php print url($url1); ?>"><img src="<?php print base_path() . drupal_get_path('theme', 'onboarding') . '/images/slide-image-1.jpg'; ?>"></a>
+                    <a href="<?php print url($url2); ?>"><img src="<?php print base_path() . drupal_get_path('theme', 'onboarding') . '/images/slide-image-2.jpg'; ?>"></a>
+                    <a href="<?php print url($url3); ?>"><img src="<?php print base_path() . drupal_get_path('theme', 'onboarding') . '/images/slide-image-3.jpg'; ?>"></a>
                 </div>
                 <div class="descriptions">
-                    <div class="desc" style="display: none;"><?php print check_markup(theme_get_setting('slide1_desc','business')); ?></div>
-                    <div class="desc" style="display: none;"><?php print check_markup(theme_get_setting('slide2_desc','business')); ?></div>
-                    <div class="desc" style="display: none;"><?php print check_markup(theme_get_setting('slide3_desc','business')); ?></div>
+                    <div class="desc" style="display: none;"><?php print check_markup(theme_get_setting('slide1_desc','onboarding')); ?></div>
+                    <div class="desc" style="display: none;"><?php print check_markup(theme_get_setting('slide2_desc','onboarding')); ?></div>
+                    <div class="desc" style="display: none;"><?php print check_markup(theme_get_setting('slide3_desc','onboarding')); ?></div>
                 </div>
             </div>
         
