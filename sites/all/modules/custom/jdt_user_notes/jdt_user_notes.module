@@ -36,7 +36,7 @@ function jdt_user_notes_menu() {
         'title' => 'Create Note',
         'description' => 'Creates a new note for an article',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('jdt_user_notes_new_form'),
+        'page arguments' => array('jdt_user_notes_new_form', 1),
         'access arguments' => array('notes'),
     );
     // Update note menu
@@ -44,7 +44,7 @@ function jdt_user_notes_menu() {
         'title' => 'Update Note',
         'description' => 'Update the text of an existing note',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('jdt_user_notes_update_form'),
+        'page arguments' => array('jdt_user_notes_update_form', 1, 2),
         'access arguments' => array('notes')
     );
 
@@ -56,7 +56,7 @@ function jdt_user_notes_menu() {
  *
  * Creates a custom form for entering the text for a new note
  */
-function jdt_user_notes_new_form($form, &$form_state) {
+function jdt_user_notes_new_form($form, &$form_state, $nid) {
     $form['description'] = array(
         '#type' => 'item',
         '#title' => t('Enter the text for your new note')
@@ -64,7 +64,7 @@ function jdt_user_notes_new_form($form, &$form_state) {
 
     $form['nid'] = array(
         '#type' => 'hidden',
-        '#value' => arg(1)
+        '#value' => $nid
     );
 
     $form['note'] = array(
@@ -89,6 +89,7 @@ function jdt_user_notes_new_form($form, &$form_state) {
 function jdt_user_notes_new_form_submit($form, &$form_state) {
     global $user;
     new_note($form_state['values']['nid'], $user->uid, $form_state['values']['note']);
+    // @TODO No drupal_goto in submit handler
     drupal_goto('node/' . $form_state['values']['nid']);
 }
 
@@ -97,19 +98,29 @@ function jdt_user_notes_new_form_submit($form, &$form_state) {
  *
  * Edit the text of an existing note
  */
-function jdt_user_notes_update_form($form, &$form_state) {
-    $note = get_note(arg(2));
+function jdt_user_notes_update_form($form, &$form_state, $nid, $note_id) {
+    $note = get_note($note_id);
 
     $form['description'] = array(
         '#type' => 'item',
         '#title' => t('Edit an existing note')
     );
 
-    $form['note'] = array(
+    $form['note_text'] = array(
         '#type' => 'textarea',
         '#title' => t('Note'),
         '#default_value' => $note->fetch()->note_text,
         '#required' => TRUE
+    );
+
+    $form['note_id'] = array(
+        '#type' => 'hidden',
+        '#value' => $note_id
+    );
+
+    $form['nid'] = array(
+        '#type' => 'hidden',
+        '#value' => $nid
     );
 
     $form['submit'] = array(
@@ -126,6 +137,7 @@ function jdt_user_notes_update_form($form, &$form_state) {
  * Will update the text of the note in the database
  */
 function jdt_user_notes_update_form_submit($form, &$form_state) {
-    update_note(arg(2), $form_state['values']['note']);
-    drupal_goto('node/' . arg(1));
+    update_note($form_state['values']['note_id'], $form_state['values']['note_text']);
+    // @TODO No drupal_goto in submit handler
+    drupal_goto('node/' . $form_state['values']['nid']);
 }

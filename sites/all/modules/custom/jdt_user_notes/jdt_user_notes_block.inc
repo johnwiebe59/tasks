@@ -106,6 +106,7 @@ function jdt_user_notes_article_form($form, &$form_state, $nid) {
  * Links to specified menu
  */
 function jdt_user_notes_article_form_new($form, &$form_state) {
+  // @TODO No drupal_goto in submit handler
   drupal_goto('node/' . $form_state['values']['nid'] . '/create_note');
 }
 
@@ -116,5 +117,6 @@ function jdt_user_notes_article_form_new($form, &$form_state) {
   * Links to specified menu
   */
 function jdt_user_notes_article_form_submit($form, &$form_state) {
+  // @TODO No drupal_goto in submit handler
   drupal_goto('node/' . $form_state['values']['nid'] . '/' . $form_state['values']['table']);
 }
