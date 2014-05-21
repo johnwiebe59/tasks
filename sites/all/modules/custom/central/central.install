@@ -98,7 +98,7 @@ function central_update_7006(&$sandbox) {
  */
 function central_update_7007(&$sandbox) {
   $enable = array(
-    'on-boarding'
+    'on_boarding'
   );
   $disable = array(
     'bartik'
