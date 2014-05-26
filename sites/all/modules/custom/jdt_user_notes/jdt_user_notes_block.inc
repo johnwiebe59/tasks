@@ -9,6 +9,7 @@
  * Implements hook_block_info()
  *
  * Defines a block only visible on pages of content type 'article'
+ * And a block for displaying site statistics
  */
 function jdt_user_notes_block_info() {
   $blocks['notes'] = array(
@@ -29,6 +30,13 @@ function jdt_user_notes_block_info() {
                   return FALSE; 
                 ?>"
   );
+  $blocks['statistics'] = array(
+    'info' => t('Site Statistics'),
+    'cache' => DRUPAL_CACHE_PER_ROLE,
+    'status' => 1,
+    'region' => 'sidebar_first'
+  );
+
   return $blocks;
 }
 
@@ -41,8 +49,39 @@ function jdt_user_notes_block_view($delta = '') {
       $block['subject'] = t('Notes for this article:');
       $block['content'] = drupal_get_form('jdt_user_notes_article_form', arg(1));
       break;
+    case 'statistics' :
+      $block['subject'] = t('Site Statistics');
+      $block['content'] = site_statistics_content();
   }
   return $block;
+}
+
+function site_statistics_content() {
+  $articles = db_select('node')
+    ->condition('type', 'article', '=')
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+
+  $notes = db_select('jdt_user_notes')
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+
+  $users = db_select('users')
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+
+  $content = array(
+    '#items' => array(
+      'Number of Articles: ' . $articles,
+      'Number of Notes: ' . $notes,
+      'Number of Users: ' . ($users - 1)
+    ),
+    '#theme' => 'item_list'
+  );
+  return $content;
 }
 
 /**

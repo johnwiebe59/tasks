@@ -7,3 +7,4 @@ files[] = jdt_user_notes.test
 files[] = jdt_user_notes_block.inc
 dependencies[] = php
 dependencies[] = ctools
+dependencies[] = block
