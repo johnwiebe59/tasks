@@ -30,11 +30,11 @@ function jdt_user_notes_block_info() {
                   return FALSE; 
                 ?>"
   );
+
   $blocks['statistics'] = array(
     'info' => t('Site Statistics'),
     'cache' => DRUPAL_CACHE_PER_ROLE,
     'status' => 1,
-    'region' => 'sidebar_first'
   );
 
   return $blocks;
@@ -49,6 +49,7 @@ function jdt_user_notes_block_view($delta = '') {
       $block['subject'] = t('Notes for this article:');
       $block['content'] = drupal_get_form('jdt_user_notes_article_form', arg(1));
       break;
+
     case 'statistics' :
       $block['subject'] = t('Site Statistics');
       $block['content'] = site_statistics_content();

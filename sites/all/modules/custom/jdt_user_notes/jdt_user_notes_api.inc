@@ -18,16 +18,6 @@ function get_note($note_id) {
 }
 
 /**
- * Get all notes created by the current user
- */
-function get_all_notes($uid) {
-  return db_select('jdt_user_notes')
-    ->fields('jdt_user_notes', array('note_id', 'note_text'))
-    ->condition('author_uid', $uid, '=')
-    ->execute();
-}
-
-/**
  * Get notes for current article made by the current user
  */
 function get_article_notes($uid, $nid) {
@@ -50,18 +40,6 @@ function new_note($nid, $uid, $text) {
       'author_uid' => $uid,
       'note_text' => $text
     ))
-    ->execute();
-}
-
-/**
- * Delete an existing note
- */
-function delete_note($uid, $nid) {
-  $conditions = db_and()
-    ->condition('author_uid', $uid, '=')
-    ->condition('article_nid', $nid, '=');
-  db_delete('jdt_user_notes')
-    ->condition($conditions)
     ->execute();
 }
 
