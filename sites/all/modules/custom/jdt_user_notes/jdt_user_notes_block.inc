@@ -34,7 +34,7 @@ function jdt_user_notes_block_info() {
   $blocks['statistics'] = array(
     'info' => t('Site Statistics'),
     'cache' => DRUPAL_CACHE_PER_ROLE,
-    'status' => 1,
+    'status' => 1
   );
 
   return $blocks;
@@ -44,8 +44,12 @@ function jdt_user_notes_block_info() {
  * Implements hook_block_view()
  */
 function jdt_user_notes_block_view($delta = '') {
+  $block = '';
   switch ($delta) {
     case 'notes' :
+      ctools_include('modal');
+      ctools_modal_add_js();
+
       $block['subject'] = t('Notes for this article:');
       $block['content'] = drupal_get_form('jdt_user_notes_article_form', arg(1));
       break;
@@ -53,6 +57,7 @@ function jdt_user_notes_block_view($delta = '') {
     case 'statistics' :
       $block['subject'] = t('Site Statistics');
       $block['content'] = site_statistics_content();
+      break;
   }
   return $block;
 }
@@ -109,7 +114,7 @@ function jdt_user_notes_article_form($form, &$form_state, $nid) {
       '#options' => $options
     );
    
-    // Selecting this button will link to a new page of the form where you can update the note
+    // Button to update the selected, existing note
     $form['update_note'] = array(
       '#type' => 'submit',
       '#value' => t('Edit selected note'),
@@ -123,30 +128,24 @@ function jdt_user_notes_article_form($form, &$form_state, $nid) {
     );
   }
 
+  // Store the node_id
   $form['nid'] = array(
     '#type' => 'hidden',
     '#value' => $nid
   );
 
-  // Selecting this button will link to a new form for creating a note.
-  // Should this even be in this form?
+  // Button to create a new note
+  // Make this jsut a button.
   $form['new_note'] = array(
     '#type' => 'submit',
     '#value' => t('Create new note'),
-    '#submit' => array('jdt_user_notes_article_form_new')
+    '#attributes' => array(
+      'class' => array('ctools-use-modal')
+    )
   );
 
+  $form['#action'] = url('node/' . $nid . '/nojs/create_note');
   return $form;
-}
-
-/**
- * Implements hook_form_submit()
- *
- * Submit handler to create a new note.
- * Links to specified menu
- */
-function jdt_user_notes_article_form_new($form, &$form_state) {
-  $form_state['redirect'] = 'node/' . $form_state['values']['nid'] . '/create_note';
 }
 
  /**

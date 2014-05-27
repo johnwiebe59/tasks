@@ -32,15 +32,16 @@ function jdt_user_notes_permission() {
 function jdt_user_notes_menu() {
 
     // Create note menu
-    $items['node/%/create_note'] = array(
+    $items['node/%/%ctools_js/create_note'] = array(
         'title' => 'Create Note',
         'description' => 'Creates a new note for an article',
-        'page callback' => 'drupal_get_form',
-        'page arguments' => array('jdt_user_notes_new_form', 1),
+        'page callback' => 'jdt_user_notes_create_note',
+        'page arguments' => array(1, 2),
         'access arguments' => array('notes'),
+        'type' => MENU_CALLBACK
     );
     // Update note menu
-    $items['node/%/%'] = array(
+    $items['node/%/update'] = array(
         'title' => 'Update Note',
         'description' => 'Update the text of an existing note',
         'page callback' => 'drupal_get_form',
@@ -52,11 +53,39 @@ function jdt_user_notes_menu() {
 }
 
 /**
+ * Handles the modal popup.
+ */
+function jdt_user_notes_create_note($nid, $js = NULL) {
+    if ($js) {
+        ctools_include('ajax');
+        ctools_include('modal');
+
+        $form_state = array(
+            'ajax' => TRUE,
+            'title' => t('Create a New Note')
+        );
+
+        $output = ctools_modal_form_wrapper('jdt_user_notes_new_form', $form_state, $nid);
+
+        if (!empty($form_state['ajax_commads'])) {
+            $output = $form_state['ajax_commands'];
+        }
+
+        print ajax_render($output);
+        drupal_exit();
+    }
+    else {
+        return drupal_get_form('jdt_user_notes_new_form', $nid);
+    }
+}
+
+/**
  * Implements hook_form()
  *
  * Creates a custom form for entering the text for a new note
  */
 function jdt_user_notes_new_form($form, &$form_state, $nid) {
+    dpm($form_state);
     $form['description'] = array(
         '#type' => 'item',
         '#title' => t('Enter the text for your new note')
@@ -121,13 +150,6 @@ function jdt_user_notes_update_form($form, &$form_state, $nid, $note_id) {
         '#type' => 'hidden',
         '#value' => $nid
     );
-
-    $form['submit'] = array(
-        '#type' => 'submit',
-        '#value' => 'Submit',
-    );
-
-    return $form;
 }
 
 /**
