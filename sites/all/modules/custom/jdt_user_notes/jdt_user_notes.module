@@ -4,11 +4,10 @@
  * @file
  *
  * Module file for jdt_user_notes
- * Creates a permission, two menus and two forms for creating and updating notes
  */
 
 require_once('jdt_user_notes_api.inc');
-require_once('jdt_user_notes_block.inc');
+require_once('jdt_user_notes_forms.inc');
 
 /**
  * Implements hook_permission()
@@ -53,7 +52,7 @@ function jdt_user_notes_menu() {
 }
 
 /**
- * Handles the modal popup.
+ * Handles the modal popup
  */
 function jdt_user_notes_create_note($nid, $js = NULL) {
     if ($js) {
@@ -62,7 +61,8 @@ function jdt_user_notes_create_note($nid, $js = NULL) {
 
         $form_state = array(
             'ajax' => TRUE,
-            'title' => t('Create a New Note')
+            'title' => t('Create a New Note'),
+            'nid' => $nid
         );
 
         $output = ctools_modal_form_wrapper('jdt_user_notes_new_form', $form_state, $nid);
@@ -80,84 +80,89 @@ function jdt_user_notes_create_note($nid, $js = NULL) {
 }
 
 /**
- * Implements hook_form()
+ * Implements hook_block_info()
  *
- * Creates a custom form for entering the text for a new note
+ * Defines a block only visible on pages of content type 'article'
+ * And a block for displaying site statistics
  */
-function jdt_user_notes_new_form($form, &$form_state, $nid) {
-    dpm($form_state);
-    $form['description'] = array(
-        '#type' => 'item',
-        '#title' => t('Enter the text for your new note')
-    );
+function jdt_user_notes_block_info() {
+  $blocks['notes'] = array(
+    'info' => t('Display Notes'),
+    'cache' => DRUPAL_CACHE_PER_USER,
+    'status' => 1,
+    'region' => 'sidebar_first',
+    'visibility' => BLOCK_VISIBILITY_PHP,
+    // Ugly code to only display block if the user has permission and the page is an article
+    'pages' => "<?php
+                  if (arg(0) == 'node' && is_numeric(arg(1))) { 
+                    if (user_access('note')) {
+                      if (node_load(arg(1))->type == 'article') {
+                        return TRUE;
+                      }
+                    }
+                  } 
+                  return FALSE; 
+                ?>"
+  );
 
-    $form['nid'] = array(
-        '#type' => 'hidden',
-        '#value' => $nid
-    );
+  $blocks['statistics'] = array(
+    'info' => t('Site Statistics'),
+    'cache' => DRUPAL_CACHE_PER_ROLE,
+    'status' => 1
+  );
 
-    $form['note'] = array(
-        '#type' => 'textarea',
-        '#title' => t('Note'),
-        '#required' => TRUE
-    );
-
-    $form['submit'] = array(
-        '#type' => 'submit',
-        '#value' => 'Submit'
-    );
-
-    return $form;
+  return $blocks;
 }
 
 /**
- * Implements hook_submit()
- *
- * Submit the note information entered in form to database to create a new note
+ * Implements hook_block_view()
  */
-function jdt_user_notes_new_form_submit($form, &$form_state) {
-    global $user;
-    new_note($form_state['values']['nid'], $user->uid, $form_state['values']['note']);
-    $form_state['redirect'] = 'node/' . $form_state['values']['nid'];
+function jdt_user_notes_block_view($delta = '') {
+  $block = '';
+  switch ($delta) {
+    case 'notes' :
+      ctools_include('modal');
+      ctools_modal_add_js();
+
+      $block['subject'] = t('Notes for this article:');
+      $block['content'] = drupal_get_form('jdt_user_notes_article_form', arg(1));
+      break;
+
+    case 'statistics' :
+      $block['subject'] = t('Site Statistics');
+      $block['content'] = site_statistics_content();
+      break;
+  }
+  return $block;
 }
 
 /**
- * Implements hook_form()
- *
- * Edit the text of an existing note
+ * Generates the content for the site statistics block
  */
-function jdt_user_notes_update_form($form, &$form_state, $nid, $note_id) {
-    $note = get_note($note_id);
+function site_statistics_content() {
+  $articles = db_select('node')
+    ->condition('type', 'article', '=')
+    ->countQuery()
+    ->execute()
+    ->fetchField();
 
-    $form['description'] = array(
-        '#type' => 'item',
-        '#title' => t('Edit an existing note')
-    );
+  $notes = db_select('jdt_user_notes')
+    ->countQuery()
+    ->execute()
+    ->fetchField();
 
-    $form['note_text'] = array(
-        '#type' => 'textarea',
-        '#title' => t('Note'),
-        '#default_value' => $note->fetch()->note_text,
-        '#required' => TRUE
-    );
+  $users = db_select('users')
+    ->countQuery()
+    ->execute()
+    ->fetchField();
 
-    $form['note_id'] = array(
-        '#type' => 'hidden',
-        '#value' => $note_id
-    );
-
-    $form['nid'] = array(
-        '#type' => 'hidden',
-        '#value' => $nid
-    );
-}
-
-/**
- * Implements hook_submit()
- *
- * Will update the text of the note in the database
- */
-function jdt_user_notes_update_form_submit($form, &$form_state) {
-    update_note($form_state['values']['note_id'], $form_state['values']['note_text']);
-    $form_state['redirect'] = 'node/' . $form_state['values']['nid'];
+  $content = array(
+    '#items' => array(
+      'Number of Articles: ' . $articles,
+      'Number of Notes: ' . $notes,
+      'Number of Users: ' . ($users - 1)
+    ),
+    '#theme' => 'item_list'
+  );
+  return $content;
 }
