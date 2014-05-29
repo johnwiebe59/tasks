@@ -18,7 +18,9 @@ function jdt_user_notes_permission() {
     return array(
         'notes' => array(
             'title' => t('Add Notes'),
-            'description' => t('Allows a user to create and update their own notes.')
+            'description' => t(
+                'Allows a user to create and update their own notes.'
+            )
         )
     );
 }
@@ -29,45 +31,104 @@ function jdt_user_notes_permission() {
  * Create a menu entry to link to note creation form
  */
 function jdt_user_notes_menu() {
+    // View notes for article
+    $items['node/%/notes'] = array(
+        'title' => 'Notes',
+        'description' => 'View notes for this article',
+        'page callback' => 'jdt_user_notes_list',
+        'page arguments' => array(1),
+        'access arguments' => array('notes'),
+        'type' => MENU_LOCAL_TASK
+
+    ); 
 
     // Create note menu
     $items['node/%/%ctools_js/create_note'] = array(
         'title' => 'Create Note',
         'description' => 'Creates a new note for an article',
-        'page callback' => 'jdt_user_notes_create_note',
-        'page arguments' => array(1, 2),
+        'page callback' => 'jdt_user_notes_modal',
+        'page arguments' => array(1, 2, 'jdt_user_notes_new_form'),
         'access arguments' => array('notes'),
         'type' => MENU_CALLBACK
     );
+
     // Update note menu
-    $items['node/%/update'] = array(
+    $items['note/%/%ctools_js/update_note'] = array(
         'title' => 'Update Note',
         'description' => 'Update the text of an existing note',
-        'page callback' => 'drupal_get_form',
-        'page arguments' => array('jdt_user_notes_update_form', 1, 2),
-        'access arguments' => array('notes')
+        'page callback' => 'jdt_user_notes_modal',
+        'page arguments' => array(1, 2, 'jdt_user_notes_update_form'),
+        'access arguments' => array('notes'),
+        'type' => MENU_CALLBACK
     );
 
     return $items;
 }
 
 /**
- * Handles the modal popup
+ * Create a page to list all the notes for the current article
  */
-function jdt_user_notes_create_note($nid, $js = NULL) {
+function jdt_user_notes_list($nid) {
+  // CTools modal stuff
+  ctools_include('modal');
+  ctools_modal_add_js();
+
+  global $user;
+  $uid = $user->uid;
+
+  $header = array(
+    'Notes'
+  );
+
+  $notes = get_article_notes($uid, arg(1));
+
+  $rows = array();
+  foreach ($notes as $note) {
+    $rows[] = array(
+      l($note->note_text, 'note/' . $note->note_id . '/nojs/update_note', 
+        array('attributes' => array('class' => 'ctools-use-modal')))
+    );
+  }
+  // Add a link to create a new note
+  $output = l('Create a New Note', 
+    'node/' . $nid . '/nojs/create_note', array(
+        'attributes' => array('class' => 'ctools-use-modal')));
+  
+  // Create the table
+  $output .= theme('table', array('header' => $header, 'rows' => $rows));
+
+
+
+  return $output;
+}
+
+/**
+ * Handles the modal popups 
+ */
+function jdt_user_notes_modal($id, $js = NULL, $form) {
     if ($js) {
+        // Depending on the form to be used, generate an appropriate title
+        switch ($form) {
+            case 'jdt_user_notes_new_form' :
+                $title = t('Create a New Note');
+                break;
+            case 'jdt_user_notes_update_form' :
+                $title = t('Update Your Note');
+                break;
+        }
+
         ctools_include('ajax');
         ctools_include('modal');
 
         $form_state = array(
             'ajax' => TRUE,
-            'title' => t('Create a New Note'),
-            'nid' => $nid
+            'title' => $title,
+            'id' => $id
         );
 
-        $output = ctools_modal_form_wrapper('jdt_user_notes_new_form', $form_state, $nid);
+        $output = ctools_modal_form_wrapper($form, $form_state);
 
-        if (!empty($form_state['ajax_commads'])) {
+        if (!empty($form_state['ajax_commands'])) {
             $output = $form_state['ajax_commands'];
         }
 
@@ -75,7 +136,7 @@ function jdt_user_notes_create_note($nid, $js = NULL) {
         drupal_exit();
     }
     else {
-        return drupal_get_form('jdt_user_notes_new_form', $nid);
+        return drupal_get_form($form, $id);
     }
 }
 
@@ -86,13 +147,15 @@ function jdt_user_notes_create_note($nid, $js = NULL) {
  * And a block for displaying site statistics
  */
 function jdt_user_notes_block_info() {
-  $blocks['notes'] = array(
+  // List notes for article block
+  /*$blocks['notes'] = array(
     'info' => t('Display Notes'),
     'cache' => DRUPAL_CACHE_PER_USER,
     'status' => 1,
     'region' => 'sidebar_first',
     'visibility' => BLOCK_VISIBILITY_PHP,
-    // Ugly code to only display block if the user has permission and the page is an article
+    // Ugly code to only display block if the user has permission 
+    // and the page is an article
     'pages' => "<?php
                   if (arg(0) == 'node' && is_numeric(arg(1))) { 
                     if (user_access('note')) {
@@ -103,8 +166,9 @@ function jdt_user_notes_block_info() {
                   } 
                   return FALSE; 
                 ?>"
-  );
+  );*/
 
+  // Site Statistics block
   $blocks['statistics'] = array(
     'info' => t('Site Statistics'),
     'cache' => DRUPAL_CACHE_PER_ROLE,
@@ -120,13 +184,13 @@ function jdt_user_notes_block_info() {
 function jdt_user_notes_block_view($delta = '') {
   $block = '';
   switch ($delta) {
-    case 'notes' :
+    /*case 'notes' :
       ctools_include('modal');
       ctools_modal_add_js();
 
       $block['subject'] = t('Notes for this article:');
       $block['content'] = drupal_get_form('jdt_user_notes_article_form', arg(1));
-      break;
+      break;*/
 
     case 'statistics' :
       $block['subject'] = t('Site Statistics');
