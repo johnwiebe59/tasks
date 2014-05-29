@@ -126,13 +126,9 @@ function jdt_user_notes_new_form_submit($form, &$form_state) {
   global $user;
   new_note($form_state['values']['nid'], $user->uid, $form_state['values']['note']);
 
-  // Close the modal window
+  // Close the modal window and reload the content of the page
   $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
-
-  // Reload the list of notes
-  $form_state['ajax_commands'][] = ajax_command_replace('#notes_list', 
-    jdt_user_notes_list($form_state['values']['nid']));
-  dpm($form_state);
+  $form_state['ajax_commands'][] = ajax_command_replace('#notes_list', jdt_user_notes_list($form_state['values']['nid']));
 }
 
 // -----------------------------------------------------------------------------
@@ -184,10 +180,7 @@ function jdt_user_notes_update_form($form, &$form_state, $note_id) {
 function jdt_user_notes_update_form_submit($form, &$form_state) {
   update_note($form_state['values']['note_id'], $form_state['values']['note']);
 
-  // Close the modal window
+  // Close the modal window and reload the content of the page
   $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
-
-  // Reload the list of notes
-  $form_state['ajax_commands'][] = ajax_command_replace('#notes_list', 
-    jdt_user_notes_list($form_state['values']['nid']));
+  $form_state['ajax_commands'][] = ajax_command_replace('#notes_list', jdt_user_notes_list($form_state['values']['nid']));
 }

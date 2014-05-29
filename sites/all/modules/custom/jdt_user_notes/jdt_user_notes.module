@@ -73,30 +73,32 @@ function jdt_user_notes_list($nid) {
   ctools_include('modal');
   ctools_modal_add_js();
 
+  // All the content is wrapped in a div so it can be reloaded via ajax
   $output = '<div id="notes_list" >';
 
   global $user;
   $uid = $user->uid;
 
-  $header = array(
-    'Notes'
-  );
-
-  $notes = get_article_notes($uid, $nid);
-
   $rows = array();
+  $header = array('Notes (click on a note to edit it)');
+
+  // Get all the notes for this article
+  $notes = get_article_notes($uid, $nid);
   foreach ($notes as $note) {
     $rows[] = array(
-      l($note->note_text, 'node/' . $note->note_id . '/nojs/update_note', 
-        array('attributes' => array('class' => 'ctools-use-modal')))
+      l($note->note_text, 'node/' . $note->note_id . '/nojs/update_note', array('attributes' => array('class' => 'ctools-use-modal')))
     );
   }
+
+  // If the article doesn't have any notes, add a message saying so
+  if (count($rows) == 0) {
+    $rows[] = array('You currently dont have any notes for this article!');
+  }
+
   // Add a link to create a new note
-  $output .= l('Create a New Note', 
-    'node/' . $nid . '/nojs/create_note', array(
-        'attributes' => array('class' => 'ctools-use-modal')));
+  $output .= l('Create a New Note', 'node/' . $nid . '/nojs/create_note', array('attributes' => array('class' => 'ctools-use-modal')));
   
-  // Create the table
+  // Add the table
   $output .= theme('table', array('header' => $header, 'rows' => $rows));
 
   $output .= '</div>';
@@ -226,7 +228,7 @@ function site_statistics_content() {
     '#items' => array(
       'Number of Articles: ' . $articles,
       'Number of Notes: ' . $notes,
-      'Number of Users: ' . ($users - 1)
+      'Number of Users: ' . ($users - 1) // There appears to be a blank user stored in the DB
     ),
     '#theme' => 'item_list'
   );
