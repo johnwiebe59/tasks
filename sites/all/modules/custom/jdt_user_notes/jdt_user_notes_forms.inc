@@ -91,30 +91,30 @@
  * Creates a custom form for entering the text for a new note
  */
 function jdt_user_notes_new_form($form, &$form_state, $nid) {    
-    // If the form is opened in a modal, the node_id will already 
-    // be in the form state and $nid will be NULL
-    if ($nid == NULL) {
-      $nid = $form_state['id'];
-    }
+  // If the form is opened in a modal, the node_id will already 
+  // be in the form state and $nid will be NULL
+  if ($nid == NULL) {
+    $nid = $form_state['id'];
+  }
 
-    $form['nid'] = array(
-        '#type' => 'hidden',
-        '#value' => $nid
-    );
+  $form['nid'] = array(
+    '#type' => 'hidden',
+    '#value' => $nid
+  );
 
 
-    $form['note'] = array(
-        '#type' => 'textarea',
-        '#title' => t('Create a new note'),
-        '#required' => TRUE
-    );
+  $form['note'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Create a new note'),
+    '#required' => TRUE
+  );
 
-    $form['submit'] = array(
-        '#type' => 'submit',
-        '#value' => 'Submit'
-    );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Submit'
+  );
 
-    return $form;
+  return $form;
 }
 
 /**
@@ -123,13 +123,16 @@ function jdt_user_notes_new_form($form, &$form_state, $nid) {
  * Submit the note information entered in form to database to create a new note
  */
 function jdt_user_notes_new_form_submit($form, &$form_state) {
-    global $user;
-    new_note($form_state['values']['nid'], $user->uid, $form_state['values']['note']);
+  global $user;
+  new_note($form_state['values']['nid'], $user->uid, $form_state['values']['note']);
 
-    // Close the modal window
-    $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
+  // Close the modal window
+  $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
 
-    // @TODO Need to somehow reload the blocks (both notes and statistics)
+  // Reload the list of notes
+  $form_state['ajax_commands'][] = ajax_command_replace('#notes_list', 
+    jdt_user_notes_list($form_state['values']['nid']));
+  dpm($form_state);
 }
 
 // -----------------------------------------------------------------------------
@@ -140,32 +143,37 @@ function jdt_user_notes_new_form_submit($form, &$form_state) {
  * Edit the text of an existing note
  */
 function jdt_user_notes_update_form($form, &$form_state, $note_id) {
-    // If the form is opened in a modal, the node_id will already 
-    // be in the form state and $nid will be NULL
-    if ($note_id == NULL) {
-      $note_id = $form_state['id'];
-    }
+  // If the form is opened in a modal, the node_id will already 
+  // be in the form state and $nid will be NULL
+  if ($note_id == NULL) {
+    $note_id = $form_state['id'];
+  }
 
-    $note = get_note($note_id);
+  $note = get_note($note_id)->fetch();
+  
+  $form['note_id'] = array(
+    '#type' => 'hidden',
+    '#value' => $note_id
+  );
 
-    $form['note_id'] = array(
-        '#type' => 'hidden',
-        '#value' => $note_id
-    );
+  $form['nid'] = array(
+    '#type' => 'hidden',
+    '#value' => $note->article_nid
+  );
 
-    $form['note'] = array(
-        '#type' => 'textarea',
-        '#title' => t('Edit the text of your note'),
-        '#default_value' => $note->fetch()->note_text,
-        '#required' => TRUE
-    );
+  $form['note'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Edit the text of your note'),
+    '#default_value' => $note->note_text,
+    '#required' => TRUE
+  );
 
-    $form['submit'] = array(
-        '#type' => 'submit',
-        '#value' => 'Submit'
-    );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Submit'
+  );
 
-    return $form;
+  return $form;
 }
 
 /**
@@ -174,11 +182,12 @@ function jdt_user_notes_update_form($form, &$form_state, $note_id) {
  * Will update the text of the note in the database
  */
 function jdt_user_notes_update_form_submit($form, &$form_state) {
-    update_note($form_state['values']['note_id'], $form_state['values']['note']);
+  update_note($form_state['values']['note_id'], $form_state['values']['note']);
 
-    // Close the modal window
-    $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
+  // Close the modal window
+  $form_state['ajax_commands'][] = ctools_modal_command_dismiss();
 
-    // @TODO Need to somehow reload the blocks (both notes and statistics)
-
+  // Reload the list of notes
+  $form_state['ajax_commands'][] = ajax_command_replace('#notes_list', 
+    jdt_user_notes_list($form_state['values']['nid']));
 }

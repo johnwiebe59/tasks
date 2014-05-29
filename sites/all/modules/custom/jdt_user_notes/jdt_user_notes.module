@@ -53,7 +53,7 @@ function jdt_user_notes_menu() {
     );
 
     // Update note menu
-    $items['note/%/%ctools_js/update_note'] = array(
+    $items['node/%/%ctools_js/update_note'] = array(
         'title' => 'Update Note',
         'description' => 'Update the text of an existing note',
         'page callback' => 'jdt_user_notes_modal',
@@ -73,6 +73,8 @@ function jdt_user_notes_list($nid) {
   ctools_include('modal');
   ctools_modal_add_js();
 
+  $output = '<div id="notes_list" >';
+
   global $user;
   $uid = $user->uid;
 
@@ -80,24 +82,24 @@ function jdt_user_notes_list($nid) {
     'Notes'
   );
 
-  $notes = get_article_notes($uid, arg(1));
+  $notes = get_article_notes($uid, $nid);
 
   $rows = array();
   foreach ($notes as $note) {
     $rows[] = array(
-      l($note->note_text, 'note/' . $note->note_id . '/nojs/update_note', 
+      l($note->note_text, 'node/' . $note->note_id . '/nojs/update_note', 
         array('attributes' => array('class' => 'ctools-use-modal')))
     );
   }
   // Add a link to create a new note
-  $output = l('Create a New Note', 
+  $output .= l('Create a New Note', 
     'node/' . $nid . '/nojs/create_note', array(
         'attributes' => array('class' => 'ctools-use-modal')));
   
   // Create the table
   $output .= theme('table', array('header' => $header, 'rows' => $rows));
 
-
+  $output .= '</div>';
 
   return $output;
 }

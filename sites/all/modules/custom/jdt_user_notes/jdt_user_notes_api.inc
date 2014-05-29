@@ -12,7 +12,7 @@
  */
 function get_note($note_id) {
   return db_select('jdt_user_notes')
-    ->fields('jdt_user_notes', array('note_text'))
+    ->fields('jdt_user_notes', array('article_nid', 'note_text'))
     ->condition('note_id', $note_id, '=')
     ->execute();
 }
