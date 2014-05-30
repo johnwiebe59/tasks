@@ -171,7 +171,7 @@ function jdt_user_notes_block_info() {
                   return FALSE; 
                 ?>"
   );*/
-  // @TODO not showing up in a fresh repo. Neither is the context thingy.
+
   // Site Statistics block
   $blocks['statistics'] = array(
     'info' => t('Site Statistics'),
