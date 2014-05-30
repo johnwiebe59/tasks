@@ -7,49 +7,6 @@
  */
 
 /**
- * Implements hook_install()
- */
-function jdt_user_notes_install() {
-  context_save(jdt_user_notes_site_statistics_context());
-}
-
-function jdt_user_notes_site_statistics_context() {
-  $context = new stdClass();
-  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
-  $context->api_version = 3;
-  $context->name = 'site_statistics';
-  $context->description = 'Places Site Statistics block in sidebar below other blocks';
-  $context->tag = '';
-  $context->conditions = array(
-    'user' => array(
-      'values' => array(
-        'administrator' => 'administrator',
-        'authenticated user' => 'authenticated user',
-      ),
-    ),
-  );
-  $context->reactions = array(
-    'block' => array(
-      'blocks' => array(
-        'jdt_user_notes-statistics' => array(
-          'module' => 'jdt_user_notes',
-          'delta' => 'statistics',
-          'region' => 'sidebar_first',
-          'weight' => '10',
-        ),
-      ),
-    ),
-  );
-  $context->condition_mode = 0;
-  
-  // Translatables
-  // Included for use with string extractors like potx.
-  t('Places Site Statistics block in sidebar below other blocks');
-
-  return $context;
-}
-
-/**
  * Implements hook_schema()
  *
  * Initialize a database table with columns for 
