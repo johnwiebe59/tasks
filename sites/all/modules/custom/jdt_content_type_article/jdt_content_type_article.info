@@ -8,7 +8,6 @@ dependencies[] = context
 dependencies[] = ctools
 dependencies[] = date
 dependencies[] = date_api
-dependencies[] = date_views
 dependencies[] = features
 dependencies[] = field_group
 dependencies[] = image

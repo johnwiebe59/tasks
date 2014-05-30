@@ -86,7 +86,11 @@ function jdt_user_notes_list($nid) {
   $notes = get_article_notes($uid, $nid);
   foreach ($notes as $note) {
     $rows[] = array(
-      l($note->note_text, 'node/' . $note->note_id . '/nojs/update_note', array('attributes' => array('class' => 'ctools-use-modal')))
+      l(
+        $note->note_text, 
+        'node/' . $note->note_id . '/nojs/update_note', 
+        array('attributes' => array('class' => 'ctools-use-modal'))
+      )
     );
   }
 
@@ -96,7 +100,11 @@ function jdt_user_notes_list($nid) {
   }
 
   // Add a link to create a new note
-  $output .= l('Create a New Note', 'node/' . $nid . '/nojs/create_note', array('attributes' => array('class' => 'ctools-use-modal')));
+  $output .= l(
+    'Create a New Note', 
+    'node/' . $nid . '/nojs/create_note', 
+    array('attributes' => array('class' => 'ctools-use-modal'))
+  );
   
   // Add the table
   $output .= theme('table', array('header' => $header, 'rows' => $rows));
@@ -227,7 +235,7 @@ function site_statistics_content() {
     '#items' => array(
       'Number of Articles: ' . $articles,
       'Number of Notes: ' . $notes,
-      'Number of Users: ' . ($users - 1) // There appears to be a blank user stored in the DB
+      'Number of Users: ' . ($users - 1) // The DB contains a blank entry
     ),
     '#theme' => 'item_list'
   );
