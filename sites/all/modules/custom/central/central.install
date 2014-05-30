@@ -77,7 +77,7 @@ function central_update_7004(&$sandbox) {
 function central_update_7005(&$sandbox) {
   $modules = array(
     'toolbar',
-  'shortcut'
+    'shortcut'
   );
   module_disable($modules, TRUE);
 }
